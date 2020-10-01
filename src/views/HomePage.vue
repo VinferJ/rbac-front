@@ -1,12 +1,17 @@
 <template>
 <div>
-  <h1>HOME</h1>
+  <div style="width: 100%;height: 100%;position: fixed;">
+    asdsad
+  </div>
 </div>
 </template>
 
 <script>
+
+
 export default {
-name: "Home"
+  name: "Home",
+
 }
 </script>
 

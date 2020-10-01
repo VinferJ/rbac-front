@@ -50,7 +50,8 @@
                 <div style="display: flex;width: 100%;height: 50px">
                   <div style="width: 65%">
                     <el-card shadow="hover" :body-style="{padding:'0',}" >
-                      <el-input v-model="registerForm.captcha" placeholder="邮箱验证码">
+                      <el-input v-model="registerForm.captcha" @keyup.enter.native="submitRegisterForm('registerForm')"
+                                placeholder="邮箱验证码">
                         <span slot="prefix">
                             <i class="el-icon-chat-line-round" style="margin-top:16px;font-size: 18px;color:#9EABFA"></i>
                         </span>
@@ -75,16 +76,18 @@
       </div>
     </div>
   </div>
+  <fullscreen-loading-spinner loading-text="提交注册..." :visible="fullscreenLoading"/>
 </div>
 </template>
 
 <script>
 import {emailValidator} from "@/utils/validator";
 import SendCaptchaBtn from "@/components/buttons/sendCaptchaBtn";
+import FullscreenLoadingSpinner from "@/components/spinners/fullscreenLoadingSpinner";
 
 export default {
   name: "RegisterPage",
-  components: {SendCaptchaBtn},
+  components: {FullscreenLoadingSpinner, SendCaptchaBtn},
   data(){
 
     return{
@@ -112,6 +115,7 @@ export default {
           {min: 6, max: 6, message: '验证码长度为6位字符',trigger: 'blur'}
         ]
       },
+      fullscreenLoading:false,
     }
   },
   methods:{
@@ -122,7 +126,14 @@ export default {
     submitRegisterForm(formName){
       this.$refs[formName].validate( (valid) => {
         if (valid){
-          this.$message.success('GET READY TO LOG IN NOW')
+          //开启加载
+          this.fullscreenLoading = true
+          /*TODO  注册表单提交*/
+          setTimeout( () => {
+            this.fullscreenLoading = false
+            this.$message.success('GET READY TO LOG IN NOW')
+          },2000)
+
         }else {
           return false
         }

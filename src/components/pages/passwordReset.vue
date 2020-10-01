@@ -32,13 +32,11 @@
           </el-card>
         </div>
         <div style="width: 30%;margin-left: 5%">
-         <!-- <el-card shadow="hover" :body-style="{padding:'0',}"
-                   style="height: 50px;line-height: 50px;color: #409EFF;cursor: pointer">发送验证码</el-card>-->
           <send-captcha-btn :send-to="resetPassForm.email" />
         </div>
       </div>
     </el-form-item>
-    <el-card shadow="hover" class="reset-pass-submit-btn">
+    <el-card shadow="hover" class="reset-pass-submit-btn" @click.native="submitResetPassForm('resetPassForm')">
       <span>提 交</span>
     </el-card>
   </el-form>
@@ -48,6 +46,8 @@
 <script>
 import SendCaptchaBtn from "@/components/buttons/sendCaptchaBtn";
 import {emailValidator} from "@/utils/validator";
+
+
 export default {
   name: "PasswordReset",
   components: {SendCaptchaBtn},
@@ -78,6 +78,27 @@ export default {
      */
     clearForm(){
       this.$refs['resetPassForm'].resetFields();
+    },
+
+    submitResetPassForm(formName){
+      this.$refs[formName].validate( (valid) => {
+        if (valid){
+          //开启加载
+          this.$fsloading.startLoading('提交修改...')
+          /*TODO  密码更改提交*/
+          setTimeout( () => {
+            this.$fsloading.endLoading()
+            /*通知父组件关闭对话框*/
+            this.$emit('close-dialog')
+            this.$message.success('已成功修改密码')
+            /*
+            * TODO  密码修改成功后，如果是已登录的状态，需要用户重新登录
+            * */
+          },2000)
+        }else {
+          return false
+        }
+      } )
     }
 
   }

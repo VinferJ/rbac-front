@@ -4,6 +4,10 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import router from '@/router'
 
+/*映入自定义的loading插件，全局通过prototype使用*/
+import loadingSpinner from "@/plugins/loadingSpinner";
+Vue.use(loadingSpinner)
+
 Vue.config.productionTip = false
 
 Vue.use(ElementUI)

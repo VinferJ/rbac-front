@@ -72,19 +72,24 @@
       <!--
         子组件设置引用名称，为父组件调用子组件中的方法提供支持
       -->
-      <PasswordReset ref="passReset" />
+      <PasswordReset ref="passReset" @close-dialog="closeDialog" />
     </el-dialog>
+    <fullscreen-loading-spinner loading-text="登录验证..." spinner-size=60 :visible="loading"/>
+
   </div>
 </template>
 
 <script>
 
 import PasswordReset from "@/components/pages/passwordReset";
+import {emailValidator} from "@/utils/validator";
+import FullscreenLoadingSpinner from "@/components/spinners/fullscreenLoadingSpinner";
+
 
 export default {
 
   name: "LoginPage",
-  components:{PasswordReset},
+  components:{FullscreenLoadingSpinner, PasswordReset},
   data(){
 
     return{
@@ -93,10 +98,7 @@ export default {
         password:''
       },
       loginRules:{
-        email: [
-          {required:true,message:'请输入登录邮箱',trigger:'blur'},
-          {type:'email',message: '请输入正确的邮箱地址',trigger: 'blur'}
-        ],
+        email: [{validator: emailValidator(), trigger: 'blur'}],
         password: [
           {required: true,message: '请输入登录密码',trigger: 'blur'},
           {min: 6,max: 32,message: '请输入正确的长度',trigger: 'blur'}
@@ -112,6 +114,7 @@ export default {
         borderBottomRightRadius:'20PX',
       },
       showResetPassDialog:false,
+      loading:false,
     }
   },
   methods:{
@@ -132,7 +135,12 @@ export default {
           * */
           if (!this.rememberMe){
             this.loginForm.password = ''
-            this.$router.push('/rbac/home')
+            this.loading = true
+            setTimeout(() => {
+              this.loading = false
+              this.$router.push('/rbac/home')
+            },2000)
+
           }
         }else {
           return false;
@@ -146,6 +154,10 @@ export default {
       this.$refs['passReset'].clearForm()
       //关闭对话框
       this.showResetPassDialog = false
+    },
+
+    closeDialog(){
+      this.clearPassResetForm()
     }
 
 
