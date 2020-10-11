@@ -2,7 +2,8 @@
   <div>
     <template v-for="item in routes">
       <template v-if="!item.hidden">
-        <!--不带有子路由-->
+
+        <!--不带有子路由，1级路由-->
         <el-menu-item v-if="!item.children"
                       :key="item.name" :to="item.path" :index="item.path">
           <template v-if="collapse">
@@ -18,21 +19,32 @@
             <span style="margin-left: 5px">{{item.meta.title}}</span>
           </template>
         </el-menu-item>
-        <!--包含一级或多级的子路由-->
+
+        <!--包含1级或多级的子路由-->
         <el-submenu v-else :index="item.path" :key="item.name">
           <template slot="title">
             <i :class="item.meta.icon" style="margin-left: -11px"></i>
             <span style="margin-left: 5px">{{item.meta.title}}</span>
           </template>
           <template v-for="child in item.children">
-            <template>
-              <sidebar-item v-if="child.children&&child.children.length>0" :routes="child" :key="child.name"></sidebar-item>
-              <el-menu-item v-else :index="item.path+'/'+child.path" :to="item.path+'/'+child.path" :key="child.path">
+
+            <!--子路由还包含子路由，即存在3级及3级以上的路由-->
+            <template v-if="child.children&&child.children.length>0">
+              <el-submenu :index="child.path" :key="child.name">
                 <template slot="title">
-                  <span>{{child.meta.title}}</span>
+                  <i :class="child.meta.icon" style="margin-left: -11px"></i>
+                  <span style="margin-left: 5px">{{child.meta.title}}</span>
                 </template>
-              </el-menu-item>
+                <sidebar-item :routes="child.children" :collapse="collapse" :key="child.name"></sidebar-item>
+              </el-submenu>
             </template>
+
+            <!--子路由不再包含子路由，仅有2级路由-->
+            <el-menu-item v-else :index="child.path" :to="child.path" :key="child.name">
+              <template slot="title">
+                <span>{{child.meta.title}}</span>
+              </template>
+            </el-menu-item>
           </template>
         </el-submenu>
       </template>

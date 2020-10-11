@@ -7,6 +7,8 @@ Vue.use(Router)
 /*
 * 公共路由表
 * 默认的路由表中，只设置公共的路由
+*
+* 所有路由都必须写完整的绝对路径！！！
 * */
 const publicRouterTable = [
     {
@@ -55,16 +57,40 @@ const publicRouterTable = [
         component: () => import('@/pages/Page1'),
         children: [
             {
-                path: 'p6',
-                name: 'page6',
-                meta: {title: 'page6'},
-                component: () => import('@/pages/Page6')
-            },
-            {
-                path: 'p4',
+                path: '/p1/p4',
                 name: 'page4',
-                meta: {title: 'page4'},
-                component: () => import('@/pages/Page4')
+                meta: {title: '页面4', icon: 'el-icon-menu'},
+                component: () => import('@/pages/Page4'),
+                children:[
+                    {
+                        path: '/p1/p4/p6',
+                        name: 'page6',
+                        meta: {title: 'page6', icon: 'el-icon-menu'},
+                        component: () => import('@/pages/Page6'),
+                        children:[
+                            {
+                                /*
+                                * 3级及以上的路由，必须写完整的绝对路径
+                                * */
+                                path: '/p1/p4/p6/p18',
+                                name: 'page18',
+                                meta: {title: 'page18', icon: 'el-icon-menu'},
+                                component: () => import('@/pages/Page18'),
+
+                            },
+                            {
+                                /*
+                                * 3级及以上的路由，必须写完整的绝对路径
+                                * */
+                                path: '/p1/p4/p6/p3',
+                                name: 'page3',
+                                meta: {title: 'page3', icon: 'el-icon-menu'},
+                                component: () => import('@/pages/Page3'),
+
+                            },
+                        ]
+                    },
+                ]
             },
         ]
     },

@@ -1,5 +1,8 @@
 <template>
-<diV><h1>Page 6</h1></diV>
+<diV>
+  <h1>Page 6</h1>
+  <router-view />
+</diV>
 </template>
 
 <script>
