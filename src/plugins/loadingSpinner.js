@@ -10,11 +10,17 @@
 import {Loading} from "element-ui";
 import Vue from 'vue'
 
+
+const defaultLoadingText = 'Loading...'
+
 /**
  * 开启全屏加载灯罩
  * @param loadingText       加载提示文本
  */
 const startLoading=(loadingText) => {
+    if (loadingText === undefined || loadingText === null || loadingText === ''){
+        loadingText = defaultLoadingText
+    }
     Loading.service({
         lock:true,
         text:loadingText,

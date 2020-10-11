@@ -1,17 +1,12 @@
 <template>
 <div>
-  <div style="width: 100%;height: 100%;position: fixed;">
-    asdsad
-  </div>
+  <h1>普 通 用 户 页 面</h1>
 </div>
 </template>
 
 <script>
-
-
 export default {
-  name: "Home",
-
+name: "UserPage"
 }
 </script>
 

@@ -3,10 +3,14 @@ import App from './App.vue'
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import router from '@/router'
+import '@/router/permission'
 
 /*映入自定义的loading插件，全局通过prototype使用*/
 import loadingSpinner from "@/plugins/loadingSpinner";
 Vue.use(loadingSpinner)
+
+/*使用阿里图标库*/
+import './assets/icon/iconfont.css'
 
 Vue.config.productionTip = false
 

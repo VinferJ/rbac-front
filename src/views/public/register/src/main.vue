@@ -81,9 +81,10 @@
 </template>
 
 <script>
-import {emailValidator} from "@/utils/validator";
+import {emailValidator} from "@/utils/validateUtil";
 import SendCaptchaBtn from "@/components/buttons/sendCaptchaBtn";
 import FullscreenLoadingSpinner from "@/components/spinners/fullscreenLoadingSpinner";
+import {userRegister} from "@/services/UserService";
 
 export default {
   name: "RegisterPage",
@@ -131,7 +132,8 @@ export default {
           /*TODO  注册表单提交*/
           setTimeout( () => {
             this.fullscreenLoading = false
-            this.$message.success('GET READY TO LOG IN NOW')
+            userRegister(this.registerForm)
+            this.$message.success('注册成功啦~~')
           },2000)
 
         }else {

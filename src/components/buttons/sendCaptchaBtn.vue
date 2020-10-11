@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import {validateEmail, validatePhoneNum} from "@/utils/validator";
+import {validateEmail, validatePhoneNum} from "@/utils/validateUtil";
 import {sendEmailCaptcha, sendPhoneCaptcha} from "@/services/CaptchaService";
 
 export default {

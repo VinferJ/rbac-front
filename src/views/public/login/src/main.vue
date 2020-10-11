@@ -74,7 +74,7 @@
       -->
       <PasswordReset ref="passReset" @close-dialog="closeDialog" />
     </el-dialog>
-    <fullscreen-loading-spinner loading-text="登录验证..." spinner-size=60 :visible="loading"/>
+    <fullscreen-loading-spinner loading-text="登录验证..." :spinner-size=60 :visible="loading"/>
 
   </div>
 </template>
@@ -82,8 +82,12 @@
 <script>
 
 import PasswordReset from "@/components/pages/passwordReset";
-import {emailValidator} from "@/utils/validator";
+import {emailValidator} from "@/utils/validateUtil";
 import FullscreenLoadingSpinner from "@/components/spinners/fullscreenLoadingSpinner";
+import {saveUserInfo} from "@/utils/localStorageUtil";
+import {saveToken} from "@/utils/tokenUtil";
+import {login} from "@/services/UserService";
+import {generateRouterTable} from "@/router/routerGenerator";
 
 
 export default {
@@ -130,23 +134,37 @@ export default {
     submitLoginForm(formName){
       this.$refs[formName].validate((valid) => {
         if (valid){
-          /*
-          * 不选择记住密码时，立刻情况密码输入的缓存
-          * */
-          if (!this.rememberMe){
-            this.loginForm.password = ''
-            this.loading = true
-            setTimeout(() => {
-              this.loading = false
-              this.$router.push('/rbac/home')
-            },2000)
+          this.loading = true
+          setTimeout(() => {
+            this.loading = false
+            /*
+            * 登录认证后会返回jwt令牌，保存在本地的token中
+            * 还会返回用户信息（id+用户名+角色权限集合），也需要保存
+            * */
+            const loginUser = login(this.loginForm.email,this.loginForm.password)
+            if (loginUser !== null){
+              const token = 'userToken.playload_part.setting_part'
+              this.storeLoginUser(loginUser,token)
+              /*动态生成用户路由*/
+              const menuList = loginUser.menuList
+              generateRouterTable(menuList)
 
-          }
+              this.$router.push('/rbac/home')
+            }else {
+              this.$message.error('邮箱地址或登录密码不正确')
+            }
+          },2000)
         }else {
           return false;
         }
       })
 
+    },
+
+    storeLoginUser(loginUser,token){
+      /*TODO  引入store模块，保存用户信息*/
+      saveUserInfo(loginUser)
+      saveToken(token,null)
     },
 
     clearPassResetForm(){

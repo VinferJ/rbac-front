@@ -5,6 +5,11 @@
 * 对输入参数进行校验
 * */
 
+
+/**
+ * 邮箱地址输入验证器
+ * @return {function(*, *=, *): (*)}
+ */
 export function emailValidator(){
     return (rule,value,callback) => {
         const emailReg=/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/;
@@ -18,11 +23,21 @@ export function emailValidator(){
     }
 }
 
+/**
+ * 邮箱地址正则验证
+ * @param email         邮箱地址
+ * @return {boolean}
+ */
 export function validateEmail(email){
     const emailReg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/;
     return emailReg.test(email)
 }
 
+/**
+ * 手机号码正则验证
+ * @param phoneNum      手机号码
+ * @return {boolean}
+ */
 export function validatePhoneNum(phoneNum){
     const phoneNumReg = /^1[3456789]\d{9}$/;
     return phoneNumReg.test(phoneNum)

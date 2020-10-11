@@ -45,7 +45,7 @@
 
 <script>
 import SendCaptchaBtn from "@/components/buttons/sendCaptchaBtn";
-import {emailValidator} from "@/utils/validator";
+import {emailValidator} from "@/utils/validateUtil";
 
 
 export default {
