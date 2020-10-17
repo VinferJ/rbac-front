@@ -1,5 +1,7 @@
 <template>
-<div><h1>Page 18</h1></div>
+<div>
+  <h1>Page 18</h1>
+</div>
 </template>
 
 <script>
@@ -9,5 +11,6 @@ name: "Page18"
 </script>
 
 <style scoped>
+
 
 </style>

@@ -1,4 +1,3 @@
-
 /*
 * 拥有全权限菜单的路由表
 * */
@@ -13,6 +12,10 @@ import Page3 from "@/pages/Page3";
 import Page18 from "@/pages/Page18";
 import Page6 from "@/pages/Page6";
 import Page4 from "@/pages/Page4";
+import Layout from "@/layout"
+import UserPage from "@/views/user/UserPage";
+import AdminPage from "@/views/admin/AdminPage";
+//import DevelopingPage from "@/components/pages/developingPage";
 
 
 /**
@@ -32,67 +35,77 @@ import Page4 from "@/pages/Page4";
 const allPermissionRouterTable = [
     {
         path: '/',
-        redirect: '/rbac/home'
+        redirect: '/rbac'
     },
     {
         path: '/rbac/login',
         meta: {title:'用户登录'},
-        component: () => import('@/views/public/login/src/main')
+        component: () => import('@/views/public/login')
     },
     {
         path: '/rbac/register',
         meta: {title:'用户注册'},
-        component: () => import('@/views/public/register/src/main')
+        component: () => import('@/views/public/register')
     },
-    {
-        path: '/rbac/home',
-        name: 'home',
-        meta: {title:'主页', icon: 'el-icon-house'},
-        component: () => import('@/views/user/home')
-    },
+
     {
         path: '/rbac/user',
         name: 'user',
         meta: {title:'用户页', icon: 'el-icon-menu'},
-        component: () => import('@/views/user/UserPage')
+        component: UserPage
     },
     {
         path: '/rbac/admin',
         name: 'admin',
         meta: {title:'管理员页', icon: 'el-icon-menu'},
-        component: () => import('@/views/admin/AdminPage')
+        component: AdminPage
     },
     {
         path: '/p1',
+        name: 'p1',
         meta: {title: 'page1', icon: 'el-icon-menu'},
         component: Page1
     },
     {
         path: '/p2',
+        name: 'p2',
         meta: {title: 'page2', icon: 'el-icon-menu'},
         component: Page2
     },
     {
-        path: 'p3',
-        meta: {title: 'page3'},
+        path: '/p3',
+        name: 'p3',
+        meta: {title: 'page3', icon: 'el-icon-menu'},
         component: Page3
     },
     {
-        path: 'p4',
-        meta: {title: 'page4'},
+        path: '/p4',
+        name: 'p4',
+        meta: {title: 'page4', icon: 'el-icon-menu'},
         component: Page4
     },
     {
-        path: 'p6',
-        meta: {title: 'page6'},
+        path: '/p6',
+        name: 'p6',
+        meta: {title: 'page6', icon: 'el-icon-menu'},
         component: Page6
     },
     {
-        path: 'p18',
-        meta: {title: 'page18'},
+        path: '/p18',
+        name: 'p18',
+        meta: {title: 'page18', icon: 'el-icon-menu'},
         component: Page18
     },
 ]
+
+//页面布局组件，是菜单生成的基本父组件
+const layout = Layout
+
+/*
+* 默认页面组件，当用户添加或创建新的view-resource时，会使用
+* 该默认页面作为component，页面开发完成时可以手动替换
+* */
+//const developing = DevelopingPage
 
 /**
  * 根据传入的权限菜单动态生成路由表
@@ -100,28 +113,37 @@ const allPermissionRouterTable = [
  * @return {[]}
  */
 export function generateRouterTable(menuList){
-    let userRouterMap = []
+    let userRouterTable = []
     let useDefault = false
     /*
     * 根据权限菜单列表，设置用户对应的路由表
     * */
     allPermissionRouterTable.forEach( (router) => {
         if (menuList !== null && menuList.length > 0){
-            if (menuList.indexOf(router.path) !== -1){
-                userRouterMap.push(router)
-            }
+            menuList.forEach( item => {
+                if (item.path === router.path){
+                    /*
+                    * 添加路由所需要的属性
+                    * */
+                    item.meta = router.meta
+                    item.name = router.name
+                    item.component = router.component
+                    userRouterTable.push(buildRouter(item))
+                }
+            })
         }else {
             console.log('Menu list is null or empty! Generated router map with public router map')
-            useDefaultRouterMap(userRouterMap)
+            useDefaultRouterMap(userRouterTable)
             useDefault = true
         }
     })
-    setCurrentRouterTable(userRouterMap)
+    console.log(userRouterTable)
+    setCurrentRouterTable(userRouterTable)
     /*真正意义的动态路由生成和设置*/
     if (!useDefault){
-        router.addRoutes(userRouterMap)
+        router.addRoutes(userRouterTable)
     }
-    return userRouterMap
+    return userRouterTable
 }
 
 /**
@@ -151,25 +173,73 @@ function useDefaultRouterMap(routerMap){
 }
 
 export function dynamicGenerateRouterTable(originalTable){
-    buildRouterTable(originalTable)
+    recursiveBuildRouter(originalTable)
     router.addRoutes(originalTable)
 }
 
-function buildRouterTable(originalTable){
+function buildRouter(route){
+    /*
+    * children长度为0，说明只有1级路由
+    * 需要为其封装一层layout作为组件的父路由
+    * */
+    if (route.children.length === 0){
+        return addParentLayout(route)
+    }else {
+        recursiveBuildRouter(route.children,route.path)
+        route = generateCompleteComponent(route)
+        return route
+    }
+}
+
+function recursiveBuildRouter(originalTable,parentPath){
     allPermissionRouterTable.forEach((router) => {
-        originalTable.forEach((table) => {
+        for (let i = 0; i < originalTable.length; i++) {
             /*
             * 根据path匹配，匹配成功，那么给table动态
             * 添加component、meta属性
             * */
-            if (table.path === router.path){
-                table.component = router.component
-                table.meta = router.meta
+            if (originalTable[i].path === router.path){
+                originalTable[i].component = router.component
+                originalTable[i].name = router.name
+                originalTable[i].meta = router.meta
+                originalTable[i].path = parentPath + originalTable[i].path
+                if (originalTable[i].children.length === 0){
+                    delete originalTable[i].children
+                }
             }
-            if (table.children.length > 0){
-                buildRouterTable(table.children)
+            if (originalTable[i].children !== undefined && originalTable[i].children.length > 0){
+                recursiveBuildRouter(originalTable[i].children,parentPath+originalTable[i].path)
             }
-        })
+        }
     })
+
+}
+
+function addParentLayout(route){
+    let parent = {
+        path: '/parent' + route.path,
+        levelOneMenu:true,
+        meta: route.meta,
+        component: layout,
+        children: []
+    }
+    /*
+    * 这里需要删除当前路由的空的children属性，
+    * 因为生成渲染sidebar-item时需要根据该属性判断
+    * 空的children会影响判断结果
+    * */
+    delete route.children
+    parent.children.push(route)
+    return parent
+}
+
+function generateCompleteComponent(route){
+    return {
+        path: route.path,
+        name: route.name,
+        meta: route.meta,
+        component: layout,
+        children: route.children
+    }
 }
 

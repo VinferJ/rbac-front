@@ -13,22 +13,22 @@ Vue.use(Router)
 const publicRouterTable = [
     {
         path: '/',
-        redirect: '/rbac/home',
-        name: 'default',
+        redirect: '/rbac',
+        name: 'default-jump',
         hidden: true
     },
     {
         path: '/rbac/login',
         name: 'login',
         meta: {title:'用户登录'},
-        component:() => import('@/views/public/login/src/main'),
+        component:() => import('@/views/public/login'),
         hidden: true
     },
     {
         path: '/rbac/register',
         name: 'register',
         meta:{title:'用户注册'},
-        component:() => import('@/views/public/register/src/main'),
+        component:() => import('@/views/public/register'),
         hidden: true
     },
     {
@@ -51,10 +51,26 @@ const publicRouterTable = [
         ]*/
     },
     {
+        path: '/rbac',
+        name: 'rbac',
+        levelOneMenu:true,
+        redirect: '/rbac/home',
+        meta: {title: 'rbac', icon: 'el-icon-house'},
+        component: () => import('@/layout'),
+        children: [
+            {
+                path: '/rbac/home',
+                name: 'home',
+                meta: {title:'主页', icon: 'el-icon-house'},
+                component: () => import('@/views/user/home')
+            },
+        ]
+    },
+    {
         path: '/p1',
         name: 'page1',
         meta: {title: '页面1', icon: 'el-icon-menu'},
-        component: () => import('@/pages/Page1'),
+        component: () => import('@/layout'),
         children: [
             {
                 path: '/p1/p4',
@@ -69,19 +85,12 @@ const publicRouterTable = [
                         component: () => import('@/pages/Page6'),
                         children:[
                             {
-                                /*
-                                * 3级及以上的路由，必须写完整的绝对路径
-                                * */
                                 path: '/p1/p4/p6/p18',
                                 name: 'page18',
                                 meta: {title: 'page18', icon: 'el-icon-menu'},
                                 component: () => import('@/pages/Page18'),
-
                             },
                             {
-                                /*
-                                * 3级及以上的路由，必须写完整的绝对路径
-                                * */
                                 path: '/p1/p4/p6/p3',
                                 name: 'page3',
                                 meta: {title: 'page3', icon: 'el-icon-menu'},
@@ -95,17 +104,19 @@ const publicRouterTable = [
         ]
     },
     {
-        path: '/p2',
-        name: 'page2',
-        meta: {title: '页面2', icon: 'el-icon-menu'},
-        component: () => import('@/pages/Page2'),
+        path: '/rbac/default',
+        levelOneMenu:true,
+        name: 'default',
+        redirect: '/rbac/default/developing',
+        meta: {title: '开发页面', icon: 'el-icon-menu'},
+        component: () => import('@/layout'),
         children: [
             {
-                path: 'p18',
-                name: 'page18',
-                meta: {title: 'page18'},
-                component: () => import('@/pages/Page18')
-            }
+                path: '/rbac/default/developing',
+                name: 'developing',
+                meta: {title: '开发中', icon: 'el-icon-menu'},
+                component: () => import('@/components/pages/developingPage'),
+            },
         ]
     },
 ]

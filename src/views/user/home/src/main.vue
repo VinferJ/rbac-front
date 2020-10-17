@@ -8,11 +8,11 @@
       <el-button type="primary" @click="showRouter">用户路由表</el-button>
       <el-button type="primary" @click="generateRouter">动态路由</el-button>
     </el-card>
-    <div style="width: 200px;height: auto;margin-top: 100px;margin-left: 100px;margin-bottom: 100px">
-      <div  :style="{width:cardWidth+'px',borderRight:'none'}" >
+    <!--<div style="height: auto;margin-top: 100px;margin-left: 100px;margin-bottom: 100px">
+      <div  :style="{width:sidebarWidth+'px',borderRight:'none'}" >
         <Layout @sidebar-collapse="handleCollapse"></Layout>
       </div>
-    </div>
+    </div>-->
   </div>
 </div>
 </template>
@@ -25,22 +25,21 @@ import {clearToken} from "@/utils/tokenUtil";
 import {getCurrentRouterTable} from "@/router";
 import {dynamicGenerateRouterTable} from "@/router/routerGenerator";
 import {permissionTable} from "@/tables/permission_table";
-import Layout from '@/layout'
+import {SIDEBAR} from "@/constants/style-constant";
 
 export default {
   name: "Home",
-  components:{Layout},
   data(){
     return{
       text:'',
       routerTable:[],
-      cardWidth:200
+      sidebarWidth: SIDEBAR.DEFAULT_WIDTH
     }
   },
   methods:{
 
     handleCollapse(width){
-      this.cardWidth = width
+      this.sidebarWidth = width
     },
 
     showDetails(){

@@ -1,17 +1,20 @@
 <template>
-  <div style="width: 100%;height: 100%">
+  <div style="width: 100%;height: 100%;">
     <div class="scrollbar-content">
       <div class="collapse-btn" @click="handleCollapse">
         <template v-if="isCollapse">
-          <i class="iconfont ali-icon-zhedie2"></i>
+          <i style="font-size: 20px" class="iconfont ali-icon-zhedie2"></i>
         </template>
         <template v-else>
-          <i class="iconfont ali-icon-zhedie1"></i>
+          <i style="font-size: 23px" class="iconfont ali-icon-zhedie1"></i>
         </template>
       </div>
       <el-scrollbar>
         <el-menu :default-active="this.$route.path"
-                 :style="{width:menuWidth+'px'}"
+                 :style="{width:menuWidth+'px',}"
+                 :background-color=backgroundColor
+                 :text-color=textColor
+                 :active-text-color=activeTextColor
                  :router="true" :collapse="isCollapse">
           <sidebar-item :routes="routes" :collapse="isCollapse" />
         </el-menu>
@@ -22,6 +25,7 @@
 
 <script>
 import SidebarItem from "@/layout/src/components/sidebar-item";
+import {SIDEBAR} from "@/constants/style-constant";
 export default {
   name: "Sidebar",
   components: {SidebarItem},
@@ -29,15 +33,19 @@ export default {
     return {
       routes:this.$router.options.routes,
       isCollapse:false,
-      menuWidth: 200
+      menuWidth: SIDEBAR.DEFAULT_WIDTH,
+      backgroundColor:SIDEBAR.BACKGROUND_COLOR,
+      textColor:SIDEBAR.TEXT_COLOR,
+      activeTextColor:SIDEBAR.ACTIVE_TEXT_COLOR,
     }
   },
+
   watch:{
     isCollapse(val){
       if (val){
-        this.menuWidth = 40
+        this.menuWidth = SIDEBAR.COLLAPSE_WIDTH
       }else {
-        this.menuWidth = 200
+        this.menuWidth = SIDEBAR.DEFAULT_WIDTH
       }
       //向父组件提交折叠事件
       this.$emit('sidebar-collapse',this.menuWidth)
@@ -56,8 +64,10 @@ export default {
 .collapse-btn{
   width: inherit;cursor: pointer;
   text-align: center;
-  background: #D4D4DA;
-  margin-bottom: 10px;
+  background: #000;
+  color: #999999;
+  height: 40px;
+  line-height: 40px;
 }
 
 
@@ -72,6 +82,7 @@ export default {
 加该样式可以解决横向滚动条一致会显示的问题
 */
 /deep/.el-scrollbar__wrap{
+  height: 600px;
   overflow-x: hidden!important;
 }
 

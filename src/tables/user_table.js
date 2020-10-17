@@ -1,5 +1,10 @@
 
-export const defaultMenu = ['/rbac/home','/rbac/user']
+export const defaultMenu = [
+    {
+        path: '/rbac/user',
+        children: []
+    },
+]
 
 export let userTable = [
     {
@@ -8,9 +13,24 @@ export let userTable = [
         email: 'vinferj@vmail.com',
         password: '123456',
         menuList: [
-            '/rbac/home',
-            '/rbac/user',
-            '/rbac/admin'
+            {
+                path: '/rbac/user',
+                children: [
+                    {
+                        path: '/p1',
+                        children:[
+                            {
+                                path: '/p6',
+                                children:[]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                path: '/rbac/admin',
+                children: []
+            },
         ]
     },
     {
@@ -19,8 +39,10 @@ export let userTable = [
         email: 'zdp@zmail.com',
         password: '123456',
         menuList: [
-            '/rbac/home',
-            '/rbac/user',
+            {
+                path: '/rbac/user',
+                children: []
+            },
         ]
     }
 ]

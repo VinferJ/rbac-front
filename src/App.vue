@@ -8,6 +8,7 @@
 
 import {regenerateRouterTable} from "@/router/routerGenerator";
 
+
 export default {
   name: 'App',
   created() {
@@ -65,6 +66,10 @@ html,body{
   background-color: #999999;
 }
 
+/*
+  transition中过度效果时间设置
+  需要使用mode=out-in
+*/
 .v-enter-active,
 .v-leave-active{
   transition: all 0.5s ease;
